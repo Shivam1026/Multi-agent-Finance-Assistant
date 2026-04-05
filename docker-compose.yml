@@ -1,0 +1,29 @@
+version: '3.11'
+
+services:
+  # FastAPI Backend Service
+  backend:
+    build:
+      context: ./finance_app
+    container_name: finance-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - MODEL_NAME=${MODEL_NAME:-gpt-4-turbo-preview}
+    # Command to run only uvicorn in this service
+    command: uvicorn api.routes:app --host 0.0.0.0 --port 8000
+
+  # Streamlit Frontend Service
+  frontend:
+    build:
+      context: ./finance_app
+    container_name: finance-frontend
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://backend:8000
+    depends_on:
+      - backend
+    # Command to run only streamlit in this service
+    command: streamlit run app.py --server.port 8501 --server.address 0.0.0.0

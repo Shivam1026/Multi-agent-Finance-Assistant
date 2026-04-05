@@ -1,0 +1,51 @@
+name: Multi agent Finance Assistant
+
+on:
+  push:
+    branches: [ "main" ]   # Runs when code is pushed to the main branch
+  pull_request:
+    branches: [ "main" ]   # Runs when a PR is opened to the main branch
+
+jobs:
+  # Job to check code quality and run tests
+  test-and-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r finance_app/requirements.txt
+
+      # Optional linting step
+      # - name: Lint with ruff
+      #   run: pip install ruff && ruff check .
+
+  # Job to deploy to AWS S3 if tests pass
+  deploy-to-s3:
+    needs: test-and-lint
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Configure AWS credentials (stored as GitHub Secrets)
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1   # Change to your region
+
+      # Sync files to S3 bucket
+      - name: Upload to S3
+        run: |
+          aws s3 sync finance_app/ s3://your-s3-bucket-name --delete
