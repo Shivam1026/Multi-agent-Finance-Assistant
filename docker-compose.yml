@@ -1,0 +1,37 @@
+services:
+  backend:
+    image: ${DOCKER_HUB_USERNAME}/finance-ai-agent:latest
+    container_name: finance-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - MODEL_NAME=${MODEL_NAME:-gpt-4-turbo-preview}
+    command: uvicorn finance_app.api.routes:app --host 0.0.0.0 --port 8000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - finance-net
+
+  frontend:
+    image: ${DOCKER_HUB_USERNAME}/finance-ai-agent:latest
+    container_name: finance-frontend
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://backend:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+    command: streamlit run finance_app/app.py --server.port 8501 --server.address 0.0.0.0
+    networks:
+      - finance-net
+
+networks:
+  finance-net:
+    driver: bridge

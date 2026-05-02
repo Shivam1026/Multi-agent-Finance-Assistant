@@ -1,0 +1,15 @@
+streamlit
+fastapi
+uvicorn
+langgraph
+langchain
+langchain-openai
+langchain-community
+faiss-cpu
+yfinance
+pandas
+numpy
+scikit-learn
+python-dotenv
+plotly
+lxml
