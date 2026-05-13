@@ -3,9 +3,10 @@
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Streamlit](https://img.shields.io/badge/frontend-streamlit-red.svg)](https://streamlit.io/)
 [![FastAPI](https://img.shields.io/badge/backend-fastapi-green.svg)](https://fastapi.tiangolo.com/)
+[![AWS EC2](https://img.shields.io/badge/hosted-AWS%20EC2-orange.svg)](https://aws.amazon.com/ec2/)
 [![LangGraph](https://img.shields.io/badge/orchestration-langgraph-orange.svg)](https://github.com/langchain-ai/langgraph)
 
-A high-performance, multi-agent financial analysis platform. This system leverages specialized AI agents to provide deep market insights, technical analysis, and price forecasting through an interactive dashboard.
+A high-performance, multi-agent financial analysis platform hosted on **AWS EC2**. This system leverages specialized AI agents to provide deep market insights, technical analysis, and price forecasting through an interactive dashboard.
 
 ---
 
